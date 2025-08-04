@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #272a40 0%, #1b2133 80%);
+      min-height: 100vh;
+      margin: 0;
+      font-family: "Inter", Arial, sans-serif;
+      color: #f5f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    #app {
+      margin: 64px 0 0 0;
+    }
+    .profile-glass {
+      min-width: 360px;
+      max-width: 680px;
+      margin: auto;
+      padding: 36px 46px;
+      background: rgba(34, 41, 60, 0.63);
+      border-radius: 23px;
+      backdrop-filter: blur(15px) saturate(1.06);
+      overflow: hidden;
+      animation: fadeInCard 1.2s cubic-bezier(.42,0,.07,1.02);
+      box-shadow: none !important;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    @keyframes fadeInCard {
+      from { opacity: 0; transform: translateY(40px) scale(0.98);}
+      to { opacity: 1; transform: none;}
+    }
+    .profile-header {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .avatar {
+      width: 160px;
+      height: 160px;
+      border-radius: 28px;
+      overflow: hidden;
+      background: #233;
+      border: 4px solid #4adee4;
+      position: relative;
+      box-shadow: none !important;
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .user-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .nickname {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #7cf2fc;
+      margin-bottom: 0.45em;
+      position: relative;
+      outline: none;
+      cursor: default;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: none;
+    }
+    .status {
+      display: none !important;
+    }
+    .about {
+      color: #c7dfff;
+      font-size: 1.07rem;
+      max-width: 420px;
+      line-height: 1.6;
+      font-weight: 400;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: none;
+      margin-bottom: 24px;
+    }
+    h2 {
+      font-size: 1.13rem;
+      font-weight: 800;
+      color: #7cf2fc;
+      letter-spacing: 1px;
+      margin-top: 1.7em;
+      margin-bottom: 0.8em;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .games-list {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .game-tile {
+      min-width: 112px;
+      width: 130px;
+      background: rgba(20,31,44,0.87);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2.5px solid #232d3d;
+      position: relative;
+      transition:
+        border-color .27s cubic-bezier(.4,0,.2,1),
+        transform 0.42s cubic-bezier(.16,1.18,.23,0.92);
+      will-change: border-color, transform;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(20px);
+      box-shadow: none !important;
+    }
+    .game-tile .game-cover {
+      width: 100%;
+      height: 67px;
+      object-fit: cover;
+      transition: filter 0.28s;
+      filter: brightness(0.97) saturate(1.09);
+      display: block;
+      border-radius: 0 0 8px 8px;
+    }
+    .game-title {
+      font-size: 0.99rem;
+      font-weight: 700;
+      color: #c8f5fa;
+      padding: 8px 0 12px 0;
+      text-align: center;
+      letter-spacing: .3px;
+      min-height: 40px;
+    }
+    .game-tile:hover {
+      border-color: #32e6ff;
+      transform: translateY(-7px) scale(1.04) rotate(-1deg);
+    }
+ 
+    .crypto-block {
+      margin-top: 40px;
+    }
+    .crypto-address-label {
+      font-weight: 700;
+      color: #53b8ff;
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+    .crypto-address-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      margin-bottom: 14px;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      color: #7cf2fc;
+      background: rgba(30, 45, 65, 0.6);
+      border-radius: 14px;
+      padding: 14px 18px;
+      word-break: break-all;
+      user-select: text;
+    }
+    .crypto-address-value {
+      flex: 1;
+    }
+    .copy-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #7cf2fc;
+      padding: 4px;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+    }
+    .copy-button:hover {
+      background-color: rgba(124, 242, 252, 0.3);
+    }
+    .copy-icon {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+    .copy-msg {
+      position: absolute;
+      right: 110%;
+      top: 50%;
+      transform: translateY(-50%) translateX(10px);
+      white-space: nowrap;
+      background: #32e6ff;
+      color: #0a0a0a;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      opacity: 0;
+      user-select: none;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .copy-msg.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(-50%) translateX(0);
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="profile-glass">
+      <div class="profile-header">
+        <div class="avatar">
+          <img src="https://i.ibb.co/KBSftDy/7c5eb18cfdb1aec55b79f18979955ae7-3418584837.jpg" alt="User avatar" />
+        </div>
+        <div class="user-details">
+          <div class="nickname" tabindex="-1" ref="nickname">{{ profile.nickname }}</div>
+          <div class="about" ref="about">{{ profile.about }}</div>
+        </div>
+      </div>
+
+      <h2 ref="gamesTitle">Projects</h2>
+      <div class="games-list" ref="gamesList">
+        <div v-for="(game, i) in profile.games" :key="game.title" class="game-tile" @mouseenter="gameHover(i)" @mouseleave="gameLeave(i)">
+          <img :src="game.cover" class="game-cover" :alt="game.title" />
+          <div class="game-title">{{ game.title }}</div>
+        </div>
+      </div>
+
+      
+      <div class="crypto-block" ref="cryptoBlock">
+        <div v-for="(addr, key) in profile.crypto" :key="key">
+          <div class="crypto-address-label">{{ key }} Address</div>
+          <div class="crypto-address-row">
+            <div class="crypto-address-value">{{ addr }}</div>
+            <button class="copy-button" @click.stop="copyAddress(addr)" aria-label="Скопировать адрес">
+              <svg class="copy-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1Z" fill="currentColor"/>
+                <path d="M20 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H20C21.1 23 22 22.1 22 21V7C22 5.9 21.1 5 20 5ZM20 21H8V7H20V21Z" fill="currentColor"/>
+              </svg>
+              <div :class="['copy-msg', { show: copyMsgVisible[key] }]">Copied</div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script>
+    const { createApp, onMounted, ref, nextTick, reactive } = Vue;
+    createApp({
+      setup() {
+        const nickname = ref(null);
+        const about = ref(null);
+        const gamesTitle = ref(null);
+        const gamesList = ref(null);
+        const cryptoBlock = ref(null);
+        const copyMsgVisible = reactive({});
+
+        const profile = {
+          avatar: "https://i.imgur.com/wa2bqCZ.png",
+          nickname: "repixey",
+          about: "Description",
+          crypto: {
+            BTC: "bc1q9v94539ul8sfclzrdwlspjk428pk47lsmzhdcl",
+            SOL: "yQawmWD38ZKLDiJrNDkVf6bf6BwiXy1gs9Jy3VMueBg",
+            LTC: "LQ4xbqXiVD1AA98wngtQG9W3cqcDwabwvt",
+            USDT_ERC20: "0x6e03C945D9b10AE203ef1817601523dc86AF6dD8",
+            USDT_TRON: "TYK5MkpsE2dAqhGQwFWUAz7vuYBHTyiSuh",
+            USDT_BEP20: "0x6e03C945D9b10AE203ef1817601523dc86AF6dD8",
+            XRP: "rG5yxwTJHMYN2RcMAcg9Nh7pd4JyKeD1j",
+            ETH: "0x6e03C945D9b10AE203ef1817601523dc86AF6dD8",
+            DASH: "Xxpb9ATajfXeVHU3UsBQ64pLZzucyg1aEz",
+            BSV: "1FNXubMRNBkDhrCKmV3mHSV236QKrFAwPa",
+            BCH: "qp3j70hyfxp8vgvkkfy8fcqqctf0cxuvysql7sv8ff",
+            ZEC: "t1JmUXYjLAaYh3ZWpiVHipRjbeS5SUsAqdw"
+          },
+          games: [
+            {
+              title: "",
+              cover: "https://wallpapers.com/images/featured/blank-white-7sn5o1woonmklx1h.jpg"
+            },
+            {
+              title: "",
+              cover: "https://wallpapers.com/images/featured/blank-white-7sn5o1woonmklx1h.jpg"
+            },
+            {
+              title: "",
+              cover: "https://wallpapers.com/images/featured/blank-white-7sn5o1woonmklx1h.jpg"
+            },
+            {
+              title: "",
+              cover: "https://wallpapers.com/images/featured/blank-white-7sn5o1woonmklx1h.jpg"
+            }
+          ]
+        };
+
+        Object.keys(profile.crypto).forEach(key => {
+          copyMsgVisible[key] = false;
+        });
+
+        onMounted(() => {
+          nextTick(() => {
+            anime({
+              targets: nickname.value,
+              opacity: [0, 1],
+              translateY: [20, 0],
+              duration: 600,
+              easing: "easeOutQuad"
+            });
+            anime({
+              targets: about.value,
+              opacity: [0, 1],
+              translateY: [20, 0],
+              delay: 250,
+              duration: 600,
+              easing: "easeOutQuad"
+            });
+            anime({
+              targets: gamesTitle.value,
+              opacity: [0, 1],
+              translateY: [20, 0],
+              delay: 400,
+              duration: 600,
+              easing: "easeOutQuad"
+            });
+            anime({
+              targets: gamesList.value,
+              opacity: [0, 1],
+              translateY: [20, 0],
+              delay: 600,
+              duration: 700,
+              easing: "easeOutQuad",
+              complete: () => {
+                document.querySelectorAll('.game-tile').forEach((tile, i) => {
+                  anime({
+                    targets: tile,
+                    opacity: [0, 1],
+                    translateY: [20, 0],
+                    delay: i * 120,
+                    duration: 500,
+                    easing: "easeOutQuad"
+                  });
+                });
+              }
+            });
+            anime({
+              targets: cryptoBlock.value,
+              opacity: [0, 1],
+              translateY: [40, 0],
+              delay: 1300,
+              duration: 800,
+              easing: "easeOutExpo"
+            });
+          });
+        });
+
+        function gameHover(i) {
+          anime({
+            targets: document.querySelectorAll('.game-tile')[i],
+            scale: 1.09,
+            rotateZ: anime.random(-2, 2),
+            translateY: -9,
+            easing: "cubicBezier(.18,1.16,.47,1.34)",
+            duration: 410
+          });
+        }
+        function gameLeave(i) {
+          anime({
+            targets: document.querySelectorAll('.game-tile')[i],
+            scale: 1,
+            rotateZ: 0,
+            translateY: 0,
+            easing: "easeInOutQuart",
+            duration: 420
+          });
+        }
+
+        function copyAddress(addr) {
+          navigator.clipboard.writeText(addr).then(() => {
+            const key = Object.keys(profile.crypto).find(k => profile.crypto[k] === addr);
+            if (!key) return;
+            copyMsgVisible[key] = true;
+            setTimeout(() => {
+              copyMsgVisible[key] = false;
+            }, 1500);
+          });
+        }
+
+        return {
+          profile,
+          nickname,
+          about,
+          gamesTitle,
+          gamesList,
+          cryptoBlock,
+          copyMsgVisible,
+          gameHover,
+          gameLeave,
+          copyAddress
+        };
+      }
+    }).mount("#app");
+  </script>
+</body>
+</html>
